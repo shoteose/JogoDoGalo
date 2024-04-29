@@ -33,16 +33,17 @@ public class Controller {
     private Button Button9;
     private int count = 0;
 
-    private String x = "X Ganhou!";
-    private String y = "O Ganhou!";
-    private String z = "Recomece o Jogo";
-    private String w = "Empate!";
+    private final String x = "X Ganhou!";
+    private final String y = "O Ganhou!";
+    private final String z = "Recomece o Jogo";
+    private final String w = "Empate!";
 
+    private boolean podeJogar = true;
     public Controller() {
     }
 
     public void resetButton() {
-
+        this.playerTurn = 0;
         this.Botoes = new ArrayList(Arrays.asList(this.Button1, this.Button2, this.Button3, this.Button4, this.Button5, this.Button6, this.Button7, this.Button8, this.Button9));
 
         for (Button Button : this.Botoes) {
@@ -51,23 +52,22 @@ public class Controller {
         }
 
         this.welcomeText.setText("Jogo do Galo");
-        this.playerTurn = 0;
+        this.podeJogar = true;
+
     }
 
     public void setupButton(ActionEvent e) {
 
-
-        if (this.welcomeText.getText() != this.x && this.welcomeText.getText() != this.y && this.welcomeText.getText() != this.z && this.welcomeText.getText() != this.w) {
-            Button Button = (Button)e.getSource();
-            Button.setOnMouseClicked((mouseEvent) -> {
-                this.setPlayerSymbol(Button);
-                Button.setDisable(true);
-                this.checkForWinner();
-                ++this.count;
-            });
-        } else {
-            this.welcomeText.setText("Recomece o Jogo");
+        if (!podeJogar) {
+            this.welcomeText.setText(this.z);
+            return;
         }
+
+        Button Button = (Button)e.getSource();
+        this.setPlayerSymbol(Button);
+        Button.setDisable(true);
+        checkForWinner();
+        this.count++;
 
     }
 
@@ -84,6 +84,12 @@ public class Controller {
 
     public void checkForWinner() {
 
+        if (this.count == 9) {
+            this.welcomeText.setText(this.w);
+            this.podeJogar = false;
+            this.count = 0;
+        }
+
         for (int a = 0; a < 8; a++) {
             String linha = switch (a) {
                 case 0 -> Button1.getText() + Button2.getText() + Button3.getText();
@@ -98,13 +104,12 @@ public class Controller {
             };
 
             if (linha.equals("XXX")) {
-                this.welcomeText.setText("X Ganhou!");
+                this.welcomeText.setText(this.x);
+                this.podeJogar = false;
                 this.count = 0;
             } else if (linha.equals("OOO")) {
-                this.welcomeText.setText("O Ganhou!");
-                this.count = 0;
-            } else if (this.count == 9) {
-                this.welcomeText.setText("Empate!");
+                this.welcomeText.setText(this.y);
+                this.podeJogar = false;
                 this.count = 0;
             }
         }
