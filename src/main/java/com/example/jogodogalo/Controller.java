@@ -6,6 +6,7 @@ import java.util.Iterator;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Text;
 
 public class Controller {
@@ -66,17 +67,21 @@ public class Controller {
         Button Button = (Button)e.getSource();
         this.setPlayerSymbol(Button);
         Button.setDisable(true);
-        checkForWinner();
         this.count++;
+        checkForWinner();
+
 
     }
 
     public void setPlayerSymbol(Button Button) {
         if (this.playerTurn % 2 == 0) {
             Button.setText("X");
+            Button.setTextFill(Color.RED);
             this.playerTurn = 1;
         } else {
             Button.setText("O");
+            Button.setTextFill(Color.BLUE);
+
             this.playerTurn = 0;
         }
 
